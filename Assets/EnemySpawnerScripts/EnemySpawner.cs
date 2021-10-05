@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider2D))]
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] Enemy _enemy;
+    [SerializeField] private Enemy _enemy;
 
     private Collider2D _collider;
 
