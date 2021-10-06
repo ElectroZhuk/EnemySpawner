@@ -2,23 +2,49 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider2D))]
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private Enemy _enemy;
+    [SerializeField] private float _delay;
+    [SerializeField] private Vector2[] _points;
 
-    private Collider2D _collider;
+    private float _time;
+    private int _currentPointIndex;
 
-    private void Start()
+    private void OnEnable()
     {
-        _collider = GetComponent<Collider2D>();
+        _time = 0;
+        _currentPointIndex = 0;
     }
 
-    public void Spawn()
+    private void Update()
     {
-        float spawnPointX = Random.Range(_collider.bounds.min.x, _collider.bounds.max.x);
-        float spawnPointY = Random.Range(_collider.bounds.min.y, _collider.bounds.max.y);
-        float spawnPointZ = 0;
-        Instantiate(_enemy, new Vector3(spawnPointX, spawnPointY, spawnPointZ), Quaternion.identity);
+        if (_time >= _delay)
+        {
+            SpawnInPoint(_points[_currentPointIndex++]);
+            _time = 0;
+
+            if (_currentPointIndex >= _points.Length)
+                _currentPointIndex = 0;
+        }
+        else
+        {
+            _time += Time.deltaTime;
+        }
+    }
+
+    private void SpawnInPoint(Vector2 point)
+    {
+        Instantiate(_enemy, point, Quaternion.identity);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+
+        foreach (var point in _points)
+        {
+            Gizmos.DrawSphere(point, 0.2f);
+        }
     }
 }
