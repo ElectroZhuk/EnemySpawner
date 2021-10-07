@@ -8,34 +8,36 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float _delay;
     [SerializeField] private Vector2[] _points;
 
-    private float _time;
-    private int _currentPointIndex;
+    private bool _isSpawning;
 
     private void OnEnable()
     {
-        _time = 0;
-        _currentPointIndex = 0;
+        _isSpawning = false;
     }
 
     private void Update()
     {
-        if (_time >= _delay)
-        {
-            SpawnInPoint(_points[_currentPointIndex++]);
-            _time = 0;
-
-            if (_currentPointIndex >= _points.Length)
-                _currentPointIndex = 0;
-        }
-        else
-        {
-            _time += Time.deltaTime;
-        }
+        if (_isSpawning == false)
+            StartCoroutine(Spawn());
     }
 
-    private void SpawnInPoint(Vector2 point)
+    private void OnDisable()
     {
-        Instantiate(_enemy, point, Quaternion.identity);
+        StopCoroutine(Spawn());
+    }
+
+    private IEnumerator Spawn()
+    {
+        _isSpawning = true;
+
+        foreach (var point in _points)
+        {
+            Instantiate(_enemy, point, Quaternion.identity);
+
+            yield return new WaitForSeconds(_delay);
+        }
+
+        _isSpawning = false;
     }
 
     private void OnDrawGizmos()

@@ -132,7 +132,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -7400125497889682692, guid: 68e814df81ce81740a17ffbe1ea3fd58, type: 3}
       propertyPath: _delay
-      value: 0.5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -7400125497889682692, guid: 68e814df81ce81740a17ffbe1ea3fd58, type: 3}
       propertyPath: _points.Array.size
