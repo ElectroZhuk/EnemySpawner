@@ -8,36 +8,31 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float _delay;
     [SerializeField] private Vector2[] _points;
 
-    private bool _isSpawning;
+    private List<Coroutine> _coroutines;
 
     private void OnEnable()
     {
-        _isSpawning = false;
-    }
-
-    private void Update()
-    {
-        if (_isSpawning == false)
-            StartCoroutine(Spawn());
+        _coroutines = new List<Coroutine>();
+        _coroutines.Add(StartCoroutine(Spawn()));
     }
 
     private void OnDisable()
     {
-        StopCoroutine(Spawn());
+        foreach (var coroutine in _coroutines)
+            StopCoroutine(coroutine);
     }
 
     private IEnumerator Spawn()
     {
-        _isSpawning = true;
-
-        foreach (var point in _points)
+        while (true)
         {
-            Instantiate(_enemy, point, Quaternion.identity);
+            foreach (var point in _points)
+            {
+                Instantiate(_enemy, point, Quaternion.identity);
 
-            yield return new WaitForSeconds(_delay);
+                yield return new WaitForSeconds(_delay);
+            }
         }
-
-        _isSpawning = false;
     }
 
     private void OnDrawGizmos()
